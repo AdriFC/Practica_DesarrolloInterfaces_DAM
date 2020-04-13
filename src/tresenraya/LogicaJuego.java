@@ -72,11 +72,12 @@ public class LogicaJuego {
     public int comprobarJuego(int matriz[][]){
         // Inserta código aquí...
         
+        boolean resultado = true;
         // Comprobar si existe tres en raya
         // Comprobar horizontal
         for (int i = 0; i < matriz.length; i++)
         {
-            boolean resultado = true;
+            resultado = true;
             
             for (int j = 1; j < matriz[i].length; j++)
             {
@@ -92,9 +93,38 @@ public class LogicaJuego {
         }
         
         //Comprobar vertical
+        for (int j = 0; j < matriz.length; j++)
+        {
+            resultado = true;
+            
+            for (int i = 1; i < matriz.length; i++)
+            {
+                if(matriz[i][j] != matriz [0][j]){
+                    resultado = false;
+                    break;
+                }
+            }
+            
+            if (resultado == true){
+                return 1;
+            }
+        }
         
-        //Comprobar en diagonal
-        boolean resultado = true;
+        //Comprobar en diagonal principal
+        resultado = true;
+        for (int i = 1; i < matriz.length; i++)
+        {
+            if (matriz[i][i] != matriz[0][0]){
+                resultado = false;
+                break;
+            }
+        }
+        if (resultado == true){
+            return 1;
+        }
+        
+        //Comprobar en diagonal inversa
+        resultado = true;
         for (int i = 1; i < matriz.length; i++)
         {
             if(matriz[i][matriz.length-1-i] != matriz[0][matriz.length-1]){
@@ -125,12 +155,23 @@ public class LogicaJuego {
         // Inserta código aquí...
         
         // Deshabilita el botón
+        bt.setEnabled(false);
         
         // Insertar la ficha en el botón
-               
+        this.ponerFicha(matriz, x, y, bt);
+        
         // Comprobar si se ha ganado la partida
-         
-         // Deshabilitar tablero
+        if (this.comprobarJuego(matriz)== 1) {
+            //incrementar puntuación de jugador
+            ganador(lX, lO);
+            
+            // Deshabilitar tablero
+            jp.setEnabled(false);
+        } else {
+            //cambiar de turno
+            this.cambioTurno();
+        } 
+
          return 0;
     }
     
@@ -144,7 +185,13 @@ public class LogicaJuego {
         // Inserta código aquí...
         
         // Incrementa jugador ganador e inserta resultado en jLabel    
- 
+        if (this.turno == 0){ //Incrementar puntuación de X
+            this.setpX(this.getpX()+1);
+            lX.setText(String.valueOf(this.getpX()));
+        } else {               //Incrementar puntuación de O
+            this.setpO(this.getpO()+1); 
+            lO.setText(String.valueOf(this.getpO()));
+        }
     }
     
     /**
@@ -154,7 +201,7 @@ public class LogicaJuego {
     public void habilitarTablero( javax.swing.JPanel jp){
         // Inserta código aquí...
         // Bloquea todos los elementos del JPanel
-        
+        jp.setEnabled(habilitado); 
     }
     
     /**
