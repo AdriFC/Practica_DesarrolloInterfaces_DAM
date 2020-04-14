@@ -1,6 +1,9 @@
 package tresenraya;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class LogicaJuego {
     int turno, pX, pO; // Turno del jugador
@@ -156,17 +159,22 @@ public class LogicaJuego {
         
         // Deshabilita el botón
         bt.setEnabled(false);
+        bt.setContentAreaFilled(true);
         
         // Insertar la ficha en el botón
         this.ponerFicha(matriz, x, y, bt);
-        
+               
         // Comprobar si se ha ganado la partida
         if (this.comprobarJuego(matriz)== 1) {
             //incrementar puntuación de jugador
             ganador(lX, lO);
             
             // Deshabilitar tablero
-            jp.setEnabled(false);
+            habilitado = false;
+            habilitarTablero(jp);
+            resetColor(jp);
+            
+            
         } else {
             //cambiar de turno
             this.cambioTurno();
@@ -174,6 +182,16 @@ public class LogicaJuego {
 
          return 0;
     }
+    
+public void resetColor( javax.swing.JPanel jp){
+        // Inserta código aquí...
+        // Bloquea todos los elementos del JPanel
+        Component[] c = jp.getComponents();
+        for (Component component : c){
+            component.setBackground(Color.white);
+        }
+    }    
+    
     
     /**
      * Actualizar la puntuación de cada jugador al ganar la partida
@@ -192,6 +210,8 @@ public class LogicaJuego {
             this.setpO(this.getpO()+1); 
             lO.setText(String.valueOf(this.getpO()));
         }
+        //Cambiar de turno para que en la siguiente partida empiece el otro jugador
+        this.cambioTurno();
     }
     
     /**
@@ -201,6 +221,10 @@ public class LogicaJuego {
     public void habilitarTablero( javax.swing.JPanel jp){
         // Inserta código aquí...
         // Bloquea todos los elementos del JPanel
+        Component[] c = jp.getComponents();
+        for (Component component : c){
+            component.setEnabled(habilitado);
+        }
         jp.setEnabled(habilitado); 
     }
     
@@ -214,10 +238,11 @@ public class LogicaJuego {
      * @param bt (Botón pulsado)
      */
     public void ponerFicha(int matriz[][], int x, int y, javax.swing.JButton bt){
-        // Inserta código aquí...        
-
+        // Inserta código aquí...  
         // Insertar ficha en la posición de la matriz
-        
+        matriz[x][y] = this.turno;
+        // Llamamos al método para pintar la ficha
+        this.pintarFicha(bt);
     }
     
     /**
@@ -226,10 +251,15 @@ public class LogicaJuego {
      */
     private void pintarFicha(javax.swing.JButton bt){
         // Inserta código aquí...
-        // Si el turno es de 0 pintará una X en rojo
-
-         // Si el turno es de 1, pintará una O en azul 
-
+        
+        if (this.turno == 0){               // Si el turno es de 0 pintará una X en rojo
+            bt.setForeground(Color.red);
+            bt.setText("X");
+            
+        }else{                              // Si el turno es de 1, pintará una O en azul 
+            bt.setForeground(Color.blue);
+            bt.setText("O");
+        }
     }
     
     /**
